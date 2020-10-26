@@ -228,7 +228,7 @@ static inline pdpe_t *get_l3_table(void) { return paddr_to_virt_kern(read_cr3())
 static inline pde_t *get_l2_table(const void *va) {
     pdpe_t *l2e = l3_table_entry(get_l3_table(va), va);
 
-    return INVALID_PGENTRY(l2e)
+    return (!(l2e) || mfn_invalid((l2e)->mfn))
              ? NULL
              :
              mfn_to_virt_kern(
