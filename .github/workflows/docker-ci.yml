@@ -7,7 +7,7 @@ on:
     branches: [ mainline ]
 
 jobs:
-  build:
+  build-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - name: Install Required Packages
@@ -16,6 +16,18 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y qemu qemu-user
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: ./tools/ci/build-docker.sh
+    - name: Run the Docker image
+      run: ./tools/ci/launch-test.sh
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - name: Install Required Packages
+      run: |
+            brew install qemu docker
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: ./tools/ci/build-docker.sh
